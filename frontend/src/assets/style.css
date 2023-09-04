@@ -1,0 +1,385 @@
+/*
+@File: Rania LAKOUD 2023
+
+* This file contains the styling for the actual template. To change the look of the template, edit this file.
+
+This file's table of contents is outlined below:
+
+*******************************************
+*******************************************
+
+** - Default CSS
+** - Sidebar CSS
+** - Navbar CSS
+** - Main Banner CSS
+** - Footer CSS
+** - Course List CSS
+** - Calendar CSS
+** - Notifications CSS
+
+*/
+
+/*================================================
+Default CSS
+=================================================*/
+
+html,
+body,
+#root,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.app {
+  display: flex;
+  position: relative;
+}
+
+.main-banner {
+  padding: 10px;
+  height: 85vh;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main {
+  margin: 100px;
+}
+
+/*================================================
+Sidebar CSS
+=================================================*/
+
+.bars {
+  display: flex;
+  font-size: 25px;
+  margin-left: 50px;
+}
+
+.link {
+  display: flex;
+  color: #fff;
+  padding: 10px 15px;
+  gap: 15px;
+  transition: all 0.5s;
+}
+
+.link:hover {
+  background: lightskyblue;
+  color: #000;
+  transition: all 0.5s;
+}
+
+.active {
+  background: lightskyblue;
+  color: #000;
+}
+
+.icon,
+.link_text {
+  font-size: 20px;
+}
+
+/*================================================
+Footer CSS
+=================================================*/
+
+.footer-area {
+  border-top: 1px solid rgb(209, 209, 209);
+}
+
+.copyright-area {
+  color: gray;
+  font-weight: 500;
+  align-items: center;
+  border-top: 12px solid rgba(255, 255, 255, 0.075);
+  text-align: center;
+}
+
+/*================================================
+Cours List CSS
+=================================================*/
+
+.edit-icon {
+  cursor: pointer;
+}
+
+.custom-none {
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.custom-show {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  opacity: 1;
+  padding: 1%;
+}
+
+.box-cours {
+  cursor: pointer;
+  margin-left: 50px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.box-cours:first-child {
+  border: 1px solid red;
+}
+
+.arowicon {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+  animation: rotateAnimation 0.5s;
+  transform: rotate(180deg);
+}
+
+.arowicon.rotate {
+  animation: rotateAnimation 2s forwards;
+}
+
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.customformaton-show {
+  display: block;
+}
+
+.customformaton-none {
+  display: none;
+}
+
+.formatioons-box {
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+/*================================================
+Calendar CSS
+=================================================*/
+
+.calendrier {
+  /* url("../images/bg.jpg"); */
+  margin: auto;
+  width: 50%;
+  justify-content: space-between;
+  display: flex;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid rgb(180, 180, 180);
+  padding: 1%;
+}
+
+.event {
+  width: 100%;
+}
+
+.event-title {
+  padding-inline-start: 3%;
+}
+
+.wrapper {
+  background: #fff;
+  border-radius: 10px;
+}
+
+.wrapper header {
+  display: flex;
+  align-items: center;
+  padding: 25px 30px 10px;
+  justify-content: space-between;
+}
+
+header .current-date {
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+header .icons span {
+  height: 40px;
+  width: 40px;
+  color: #878787;
+  font-size: 1.9rem;
+  margin: 0 1px;
+  text-align: center;
+  line-height: 38px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+header .icons span:hover {
+  background: #f2f2f2;
+}
+
+.calendar {
+  padding: 20px;
+}
+
+.calendar ul {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.calendar .days {
+  margin-bottom: 20px;
+}
+
+.calendar .weeks li {
+  font-weight: 500;
+}
+
+.calendar ul li {
+  position: relative;
+  width: calc(100% / 7);
+}
+
+.calendar .days li {
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+.days li.inactive {
+  color: #aaa;
+}
+
+.days li.active {
+  color: #fff;
+}
+
+.calendar .days li::before {
+  position: absolute;
+  content: "";
+  height: 40px;
+  width: 40px;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.days li.active::before {
+  background: var(--scond-color);
+}
+
+.days li.isEvent {
+  border-bottom: 1px solid var(--therd-color);
+  z-index: 0;
+}
+
+.days li:hover .days li {
+  color: white;
+}
+
+.days li {
+  z-index: 0;
+}
+
+.hover-container {
+  display: none;
+}
+
+.days li:hover .hover-container {
+  border: 1px solid gray;
+  border-radius: 5px;
+  position: absolute;
+  top: 60%;
+  left: 60%;
+  background-color: white;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 4px;
+  z-index: 5;
+  color: var(--yellow-color);
+}
+
+@media (max-width: 900px) {
+  .calendrier {
+    margin: auto;
+    justify-content: space-between;
+    display: block;
+    background: #fff;
+    border-radius: 10px;
+  }
+  .wrapper {
+    background: #fff;
+    border-radius: 10px;
+  }
+}
+
+/*================================================
+Notifications CSS
+=================================================*/
+
+.notification {
+  /* Add your styles for notifications here */
+}
+
+.notificationCount {
+  position: relative;
+  left: 28px;
+  bottom: 9px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px;
+  width: 45px;
+  height: 40px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px;
+}
+
+.notification-list {
+  max-height: 20px;
+  border: 1px solid gray;
+}
+
+.notificationUnread-item,
+.notificationUnread-item-unread {
+  padding: 10px;
+}
+
+.notificationUnread-item-unread {
+  background-color: #4582df !important;
+}
+
+/* Custom Toast Styles */
+.custom-toast {
+  font-size: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.custom-toast img {
+  border-radius: 50%;
+  max-width: 50px; 
+  margin-right: 10px;
+}
