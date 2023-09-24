@@ -24,6 +24,12 @@ import { NewPassword } from "./screens/auth/NewPassword";
 import Footer  from "./screens/global/Footer";
 import {ProfileScreen}  from "./screens/ProfileScreen";
 import { ToastContainer } from "react-toastify";
+import AddCategorie from "./screens/categorie/add";
+import ListCategories from "./screens/categorie";
+import EditCategorie from "./screens/categorie/edit";
+import NotFound from "./screens/global/NotFound";
+import Parents from "./screens/Parents";
+import DetailsParent from "./screens/Parents/details";
 
 const App=()=>{
   const [theme,colorMode]=useMode();
@@ -45,13 +51,17 @@ const App=()=>{
 
      
       <Route  path='/confirm/:activationCode' element={<ActivationPage/> }/>
+      <Route  path='/*' element={<NotFound/> }/> 
+
 
       <Route path='' element={<PrivateRoute/> }>
-      <Route  path='/' element={<Dashoard/> }/>
-
+      <Route  path='/' element={<Eleves/> }/>
       {/* Eleves */}
       <Route  path='/Eleves' element={<Eleves/> }/>
       <Route  path='/DetailsEleve' element={<DetailsEleve/> }/> 
+            {/* Parents */}
+            <Route  path='/Parents' element={<Parents/> }/>
+      <Route  path='/DetailsParent' element={<DetailsParent/> }/> 
       {/* Enseignants */}
       <Route  path='/Enseignants' element={<Enseignants/> }/>
       <Route  path='/addensg' element={<AddEnsg/> }/>
@@ -62,7 +72,12 @@ const App=()=>{
       <Route  path='/edit' element={<Edit/> }/>
       <Route  path='/add' element={<Add/> }/>
 
+      {/* Categorie */}
+      <Route  path='/AddCategorie' element={<AddCategorie/> }/> 
+      <Route  path='/Categories' element={<ListCategories/> }/> 
+      <Route  path='/EditCategorie' element={<EditCategorie/> }/>
 
+      
 
       {/* Formation */}
       <Route  path='/Formations' element={<ListFormation/> }/>     

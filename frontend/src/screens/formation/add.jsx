@@ -13,7 +13,9 @@ import { useLocation } from "react-router-dom";
 import { useAddMutation } from "../../slices/formationApiSlice";
 import { useNavigate } from "react-router-dom";
 import { useGetMutation } from "../../slices/EnsgApiSlice";
+import { useGetMutation  as usecategories} from "../../slices/categorieApiSlice";
 import Loader from "../../components/Loader";
+import { toast } from "react-toastify";
 
 const AddFormation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -25,9 +27,25 @@ const AddFormation = () => {
   const [description, setDescription] = useState("");
   const [ensgId, setEnsgId] = useState("");
   const [getInfo, { isLoading }] = useGetMutation();
+  const [getCategorie, { isLoadingCategorie }] = usecategories();
+  const [categories, setCategories] = useState([]);
+
   const navigate = useNavigate();
   const [selectedValue, setSelectedValue] = useState();
+  const [selectedCategorieValue, setselectedCategorieValue] = useState();
 
+  useEffect(() => {
+    const getHandler = async () => {
+      try {
+        const categorieData = await getCategorie();
+        setCategories(categorieData.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getHandler();
+  }, []);
   useEffect(() => {
     const getHandler = async () => {
       try {
@@ -44,22 +62,28 @@ const AddFormation = () => {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
+  const handleChangeCategorie = (event) => {
+    setselectedCategorieValue(event.target.value);
+  };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    setEnsgId("64d3af8151c6cbb428b79946");
 
     try {
-      add({ nom, description, ensgId: selectedValue })
+      add({ nom, description, ensgId: selectedValue,categorieId: selectedCategorieValue})
         .unwrap()
         .then(() => navigate("/Formations"));
-    } catch (err) {
-      console.log(err);
-    }
+        toast.success("Formation ajoutée avec succès.");
+
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
   };
 
   return (
-    <Box m="20px">
+    <Box m="2% 5% 0 10%" height="100vh"
+ 
+    > 
       <Header
         title="Ajouter formation"
         subtitle="Ajouter une nouvelle formation"
@@ -98,7 +122,13 @@ const AddFormation = () => {
             rows={5}
             sx={{ gridColumn: "span 4" }}
           />
-
+   <Box
+         
+          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+          sx={{
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+          }}
+        >
           {isLoading && <Loader />}
           {data ? (
             <>
@@ -119,10 +149,39 @@ const AddFormation = () => {
             </>
           ) : (
             ""
-          )}
+          )}</Box>
+             <Box
+         
+          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+          sx={{
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+          }}
+        >
+               {isLoadingCategorie && <Loader />}
+          {categories ? (
+            <>
+              <InputLabel id="select-label">Sélectionnez Categorie</InputLabel>
+              <Select
+                labelId="select-label"
+                id="select"
+                value={selectedCategorieValue}
+                onChange={handleChangeCategorie}
+                label="Sélectionnez une option"
+                
+              >
+                {categories?.map((item) => (
+                  <MenuItem key={item._id} value={item._id}>
+                    {item.nomCategorie}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          ) : (
+            ""
+          )}</Box>
         </Box>
         <Box display="flex" justifyContent="end" mt="20px">
-          <Button type="submit" color="secondary" variant="contained">
+          <Button type="submit" color="info" variant="contained">
             Ajouter
           </Button>
         </Box>

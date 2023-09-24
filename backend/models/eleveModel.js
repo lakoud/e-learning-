@@ -10,7 +10,7 @@ const eleveSchema  = mongoose.Schema({
         type:String ,
         require: true,
     },
-    age:{
+    datedenaissance:{
         type:String ,
         require: true,
     },
@@ -39,6 +39,12 @@ const eleveSchema  = mongoose.Schema({
         type:String ,
     },
     resetPassword:{
+        type:String ,
+    },
+    photo:{
+        type:String ,
+    },
+    genre:{
         type:String ,
     },
     favorite: [], 

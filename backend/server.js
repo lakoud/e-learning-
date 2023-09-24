@@ -4,6 +4,9 @@ import ensgRoute from './routes/ensgRoute.js'
 import eleveRoute from './routes/eleveRoute.js'
 import formationRoute from './routes/formationRoute.js'
 import coursRoute from './routes/coursRoute.js'
+import parentRoute from './routes/parentRoute.js'
+
+import categorieRoute from './routes/categorieRoute.js'
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -51,6 +54,8 @@ app.use('/api/ensg', ensgRoute);
 app.use('/api/eleve', eleveRoute);
 app.use('/api/formation', formationRoute);
 app.use('/api/cours', coursRoute);
+app.use('/api/categorie', categorieRoute);
+app.use('/api/parent', parentRoute);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -11,11 +11,14 @@ export const infoApiSlice = apiSlice.injectEndpoints({
 
             })
         }),
-        get:builder.mutation({
-            query:()=>({
-                url:`${INFO_URL}/get`,
-                method:'GET'
-            })
+        geted:builder.mutation({
+            query: () => {
+                console.log('hey')
+                return {
+                  url: `${INFO_URL}/get`,
+                  method: 'GET',
+               };
+              },
         }),
         delete:builder.mutation({
             query:(id)=>({
@@ -27,7 +30,7 @@ export const infoApiSlice = apiSlice.injectEndpoints({
             
             query: (data) => {
               const idToUpdate = data._id;
-            console.log(data)
+         
               return {
                 url: `${INFO_URL}/${idToUpdate}`,
                 method: 'PUT',
@@ -38,4 +41,4 @@ export const infoApiSlice = apiSlice.injectEndpoints({
     })
 });
 
-export const {useAddMutation,useGetMutation,useDeleteMutation,useUpdateMutation}=infoApiSlice;
+export const {useAddMutation,useGetedMutation,useDeleteMutation,useUpdateMutation}=infoApiSlice;

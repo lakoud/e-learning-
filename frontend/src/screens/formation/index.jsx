@@ -110,7 +110,7 @@ const ListFormation = () => {
   return (
     <div className="main-banner">
       <Box m="20px">
-        <Header title="Formations" subtitle="Liste des formations" />
+        <Header title="Les formations" subtitle="Liste des formations" />
         {isLoading && <Loader />}
         <div className="d-flex justify-content-end">
           <Link to="/AddFormation">

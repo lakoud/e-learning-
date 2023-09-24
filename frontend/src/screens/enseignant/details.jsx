@@ -38,6 +38,9 @@ const DetailsEnsg = () => {
   const [idForm, setIdForm] = useState('');
   const [customFormation, setCustomFormation] = useState('customformaton-none');
   const [customIconFormation, setCustomIconFormation] = useState('');
+  
+  const [genre, setgenre] = useState('');
+  const [datecreated, setdatecreated] = useState('');
 
   const navigate = useNavigate();
   const [update, { isLoading }] = useEditMutation();
@@ -53,6 +56,9 @@ const DetailsEnsg = () => {
         setPassword(decodedData.password);
         setNumtel(decodedData.numtel);
         setListFormation(decodedData.formation);
+        setgenre(decodedData.genre);
+        setdatecreated(decodedData.createdAt)
+        console.log(decodedData)
       }
     } catch (error) {
       console.log(error);
@@ -92,14 +98,23 @@ const DetailsEnsg = () => {
   };
 
   return (
-    <Box m="20px">
-      <Box display="flex" justifyContent="center" alignItems="center">
+    <Box m="5% 5% 0 10%" height="100vh">
+      <Box     display= {isNonMobile?"flex":""}
+        gap={'15px'}
+        padding={'15px'}
+
+        sx={{
+          padding: '15px ',
+          margin:"auto",
+      }} >     
+     <Box>
+     <Box  display="flex" justifyContent="center" alignItems="center">
         <img
           alt="profile-user"
           width="200px"
           height="200px"
           src={person}
-          style={{ cursor: "pointer", borderRadius: "50%" }}
+          style={{ borderRadius: '50%',marginRight:"25px" }}
         />
       </Box>
 
@@ -108,80 +123,178 @@ const DetailsEnsg = () => {
           variant="h2"
           color={colors.grey[100]}
           fontWeight="bold"
-          sx={{ mb: "5px" }}
+          sx={{ mb: "5px" ,mt:"15px"}}
         >
-          {nom + ' ' + prenom}
+          {nom }
         </Typography>
       </Box>
 
       <Box display="flex" justifyContent="center" alignItems="center">
         <Typography variant="h5" color={colors.greenAccent[400]}>
-          Enseignant
+           Enseignant
         </Typography>
-        <Divider sx={{ height: 3, m: "20px" }} color={colors.grey[300]} />
       </Box>
-
-      <Box>
-        <Box justifyContent="center" alignItems="center" sx={{ mb: "25px" }}>
+     </Box>
           <Box
-            sx={{ borderRadius: '10px', border: '1px solid black' }}
-            justifyContent="center"
-            alignItems="center"
+            sx={{
+               borderRadius: '10px',
+                border: '1px solid black',
+                width:'100%'
+               }}
+           
           >
             {edit ? (
-              <Box>
+              <Box  sx={{
+                 width:'100%',
+                 height:'100%',
+                 marginBlock:"50px",
+                 display: 'block',
+                 flexDirection: 'column',
+                 justifyContent: 'center',
+                 
+                 
+                }} >
+
                 <Box
                   display="flex"
                   justifyContent="space-between"
                   alignItems="space-between"
                 >
+                  <Box
+                   display={isNonMobile? "flex":""}
+                  >
                   <Typography
                     variant="h5"
+                    fontWeight="bold"
                     color={colors.grey[300]}
                     sx={{ m: "15px 0 5px 20px" }}
                   >
-                    Email :{" "}
+                    Email :
+                  
+                  </Typography>
                     <Typography
                       variant="h5"
+                      
                       color={colors.grey[100]}
                       sx={{ m: "15px 0 5px 20px" }}
                     >
                       {email}
                     </Typography>
-                  </Typography>
-                  <Box padding={"10px"} className="edit-icon" onClick={() => setEdit(!edit)}>
+                    </Box>
+                  <Box padding={"10px"}className="action-icon" onClick={() => setEdit(!edit)}>
                     <EditTwoToneIcon />
                   </Box>
                 </Box>
 
+
+                <Box
+                     display={isNonMobile? "flex":""}
+                  
+                >
                 <Typography
                   variant="h5"
+                  fontWeight="bold"
                   color={colors.grey[300]}
                   sx={{ m: "15px 0 5px 20px" }}
                 >
-                  Mot de passe :{" "}
+                  ID :
+               
+                </Typography> 
                   <Typography
                     variant="h5"
                     color={colors.grey[100]}
                     sx={{ m: "15px 0 5px 20px" }}
                   >
-                    {password}
+                    {id}
                   </Typography>
-                </Typography>
+                </Box>
+              
+              
+              
+              
+                <Box 
+                      display={isNonMobile? "flex":""}
+                margin="auto"
+                
+                > 
                 <Typography
                   variant="h5"
+                  fontWeight="bold"
                   color={colors.grey[300]}
-                  sx={{ m: "15px 0 5px 20px" }}
+                  sx={{ m: "15px 0 5px 20px", maxWidth: '100%', 
+                  overflowWrap: 'break-word' }}
                 >
-                  Numéro de téléphone :{" "}
+                  Numéro de téléphone :
                   <Typography
                     variant="h5"
                     color={colors.grey[100]}
-                    sx={{ m: "15px 0 5px 20px" }}
+                    sx={{ mt: '15px ',
+                    maxWidth: '100%', 
+                    overflowWrap: 'break-word'
+                  }}
                   >
                     {numtel}
                   </Typography>
                 </Typography>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px",
+                   maxWidth: '100%', 
+                  overflowWrap: 'break-word' }}
+                >
+                 Genre :
+                  <Typography
+                    variant="h5"
+                    color={colors.grey[100]}
+                     sx={{mt: '15px ',
+                      maxWidth: '100%', 
+                  overflowWrap: 'break-word' }}
+                  >
+                    {genre}
+                  </Typography>
+                </Typography>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px", 
+                  maxWidth: '100%', 
+                  overflowWrap: 'break-word' }}
+                >
+                 Nombre des formations :
+                  <Typography
+                    variant="h5"
+                    color={colors.grey[100]}
+                    sx={{ mt: '15px ',
+                     maxWidth: '100%', 
+                    overflowWrap: 'break-word' }}
+                  >
+                    {listFormation.length}
+                  </Typography>
+                </Typography>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px", 
+                  maxWidth: '100%', 
+                  overflowWrap: 'break-word' }}
+                >
+                    Date de création :
+                  <Typography
+                    variant="h5"
+                    color={colors.grey[100]}
+                    sx={{ mt: '15px ',
+                     maxWidth: '100%', 
+                    overflowWrap: 'break-word' }}
+                  >
+                    {datecreated}
+                  </Typography>
+                </Typography>
+             
+                </Box>
               </Box>
             ) : (
               <form onSubmit={onSubmit}>
@@ -247,16 +360,23 @@ const DetailsEnsg = () => {
                   />
                 </Box>
                 <Box display="flex" justifyContent="end" padding="15px">
-                  <Button type="submit" color="secondary" variant="contained">
+                  <Button type="submit" color="info" variant="contained">
                     Modifier
                   </Button>
                 </Box>
               </form>
             )}
           </Box>
-        </Box>
+      </Box>
 
-        <Box onClick={handleCustomFormation} className="formatioons-box" display="flex" justifyContent="space-between" backgroundColor={colors.greenAccent[400]}>
+      <Box>
+     
+
+        <Box onClick={handleCustomFormation} 
+        className="formatioons-box" 
+        display="flex" 
+        justifyContent="space-between"
+        backgroundColor={colors.blueAccent[400]}>
           <Typography
             variant="h3"
             sx={{ m: "5px 0 5px 20px" }}
@@ -285,7 +405,7 @@ const DetailsEnsg = () => {
                   >
                     {item.nom}
                   </Typography>
-                  <Box padding={"10px"}>
+                  <Box padding={"10px"} className="action-icon">
                     <EditTwoToneIcon />
                   </Box>
                 </Box>
@@ -304,7 +424,7 @@ const DetailsEnsg = () => {
                 </Typography>
               </Typography>
               <Box onClick={() => handleCustom(item._id)} color="white" className="box-cours">
-                <Box backgroundColor={colors.greenAccent[400]} display="flex" justifyContent="space-between">
+                <Box backgroundColor={colors.blueAccent[400]} display="flex" justifyContent="space-between">
                   <Typography variant="h4" sx={{ m: "5px 0 5px 60px" }}>
                     Liste des cours
                   </Typography>

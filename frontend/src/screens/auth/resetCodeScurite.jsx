@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Loader from '../../components/Loader';
 import { useLocation } from 'react-router-dom';
 import { Alert, Box } from "@mui/material";
+import Footer from "../global/Footer";
 
 export const EnterCode = () => {
     const location = useLocation();
@@ -40,11 +41,9 @@ export const EnterCode = () => {
         }
     };
 
-    return (
+    return (<>      
         <div className="component">
-            <nav className="navbar">
-                <div className="logo">Logo</div>
-            </nav>
+        
             <FormContainer>
                 <h1>Entrez le code de sécurité</h1>
                 <p>Merci de vérifier dans vos e-mails que vous avez reçu un message avec votre code. Celui-ci est composé de 6 caractères.</p>
@@ -65,18 +64,22 @@ export const EnterCode = () => {
                     <Box>
                         Nous avons envoyé votre code à : {param1?.email ?? ' '}
                         <Box>
-                            <Link to="/resendCode">Code non reçu ?</Link>
+                            <Link to="/resetPassword">Code non reçu ?</Link>
                         </Box>
                     </Box>
                     {isLoading && <Loader />}
-                    <Link to='/login' variant='light' className='mt-3 mx-3 '>
-                        Annuler
-                    </Link>
-                    <Button type='submit' variant='primary' className='mt-3 '>
-                        Continuer
-                    </Button>
+                    <div className="buttons">
+                        
+                        <Button type='submit' variant='primary' className='mt-3 '>
+                            Recherche
+                        </Button>
+                        <Link to='/login' variant='light' className='mt-3 annuler-button '>
+                            Annuler
+                        </Link>
+                        </div>
                 </Form>
             </FormContainer>
-        </div>
+        </div><Footer />
+    </>
     );
 };

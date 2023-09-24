@@ -54,7 +54,18 @@ const commentSchema = mongoose.Schema({
   }, {
     timestamps: true,
   });
-  
+  const ressourcesSchema = mongoose.Schema({
+    titre: {
+      type: String,
+      require: true,
+    },
+    url: {
+      type: String,
+
+    },
+  }, {
+    timestamps: true,
+  });
 const formationSchema  = mongoose.Schema({
     nom:{
         type:String ,
@@ -64,6 +75,11 @@ const formationSchema  = mongoose.Schema({
         type:String ,
         require: true,
     },
+    prix:{
+      type:String ,
+      require: true,
+  
+  },
     miniProjets:[miniProjetSchema],
     cours: [
     {   
@@ -72,6 +88,8 @@ const formationSchema  = mongoose.Schema({
       require: true,
 
   },
+
+
     description:{
       type:String ,
       require: true,
@@ -85,6 +103,8 @@ const formationSchema  = mongoose.Schema({
     require: true,
 }, 
   commentaires: [commentSchema],
+  ressources: [ressourcesSchema],
+
   quiz:{ 
     questions:[questionsSchema],
     note:{
@@ -97,7 +117,10 @@ const formationSchema  = mongoose.Schema({
 
    ensg: { type: mongoose.Schema.Types.ObjectId, ref: 'Ensg' }, 
 
-    
+   categorie: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Categorie', // référence au modèle Categorie
+  },
    
    
 },{

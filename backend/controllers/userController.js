@@ -86,7 +86,7 @@ const logoutUser= asyncHandler( async (req,res) => {
  *  @acces public
  */
 const resetPassword= asyncHandler( async (req,res) => {
-    const {nom , email }=req.body;
+    const {name , email }=req.body;
     const userExists= await User.findOne({email});
   
     if(!userExists){
@@ -114,8 +114,52 @@ const resetPassword= asyncHandler( async (req,res) => {
           const mailOptions = {
             from: 'lucc@futurevisions.tn',
             to: email,
-            subject: 'Hello '+ nom +' from Future visions with SMTP',
-            html: `Nouveaux password  ${resetPassword}`
+            subject: 'Hello '+ userExists.name +' from Future visions ',
+            html: `<head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Réinitialisation de votre mot de passe</title>
+            <style>
+                /* Ajoutez vos styles CSS en ligne ici */
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #ffffff;
+                    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #333;
+                }
+                p {
+                    color: #555;
+                }
+                .pass{
+                    border:1px solid   #007BFF;
+                    border-raduis:15px;
+                    padding:5px;
+                    width:50%;
+                    text-align:center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Réinitialisation de votre mot de passe</h1>
+                <p>Vous avez demandé à réinitialiser votre mot de passe. Voici votre code de réinitialisation :</p>
+                <p style="font-size: 24px; font-weight: bold; color: #007BFF;"class="pass"> ${resetPassword}</p>
+                <p>Utilisez ce code pour réinitialiser votre mot de passe sur notre site.</p>
+                <p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet email en toute sécurité. Votre mot de passe restera inchangé.</p>
+            </div>
+        </body>
+    `
     };
       
           const info = await transporter.sendMail(mailOptions);

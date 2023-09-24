@@ -34,7 +34,7 @@ router.get('/eleves/:id',getEleveInscritFormationById)
 //file
 
 router.post('/upload/:formationId',protect, ajouterMiniProjet);
-router.delete('/upload/:formationId/:miniProjetId/:fileName',protect, supprimerFichier);
+router.delete('/upload/:formationId/:miniProjetId/',protect, supprimerFichier);
 
 
 

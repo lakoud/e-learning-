@@ -4,7 +4,9 @@ import generateToken   from "../utils/generateToken.js";
 import Formation from "../models/formationModel.js";
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
-
+import multer from 'multer';
+import fs from 'fs';
+import Ensg from "../models/ensgModel.js";
 /**
  * @desc Auth user/set token
  *  @route POST /api/eleve/auth
@@ -37,7 +39,7 @@ const authUser= asyncHandler( async (req,res) => {
  */
 
 const registerUser= asyncHandler( async (req,res) => {
-    const {nom , email , password,numtel,age,prenom,nvEtude}=req.body;
+    let {nom , email , password,numtel,datedenaissance,prenom,nvEtude}=req.body;
     const userExists= await Eleve.findOne({email});
 
     if(userExists){
@@ -56,7 +58,7 @@ const registerUser= asyncHandler( async (req,res) => {
         email,
         password,
         numtel,
-        age,
+        datedenaissance,
         prenom,
         nvEtude,
         activationCode
@@ -81,8 +83,47 @@ const registerUser= asyncHandler( async (req,res) => {
             from: 'lucc@futurevisions.tn',
       to: email,
       subject: 'Hello '+ nom +' from Future visions with SMTP',
-      html: `Click the following link to verify your email: 
-      <a href=http://localhost:3000/confirm/${activationCode}> Cliquer ici</a>`
+      html: `<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Vérification de votre compte</title>
+      <style>
+          /* Ajoutez vos styles CSS en ligne ici */
+          body {
+              font-family: Arial, sans-serif;
+              background-color: #f4f4f4;
+              margin: 0;
+              padding: 0;
+          }
+          .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+              color: #333;
+          }
+          p {
+              color: #555;
+          }
+          a {
+              color: #007BFF;
+              text-decoration: none;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <h1>Vérification de votre compte</h1>
+          <p>Merci de vous être inscrit sur notre site. Pour activer votre compte, veuillez cliquer sur le lien de vérification ci-dessous :</p>
+          <p>   <a href=http://localhost:3000/confirm/${activationCode}>Vérifier mon compte</a></p>
+          <p>Si vous n'avez pas créé de compte sur notre site, vous pouvez ignorer cet email en toute sécurité.</p>
+      </div>
+  </body>
+    `
     };
       
           const info = await transporter.sendMail(mailOptions);
@@ -166,8 +207,51 @@ const resetPassword= asyncHandler( async (req,res) => {
         const mailOptions = {
           from: 'lucc@futurevisions.tn',
           to: email,
-          subject: 'Hello '+ nom +' from Future visions with SMTP',
-          html: `Nouveaux password  ${resetPassword}`
+          subject: 'Hello '+ nom +' from Future visions ',
+          html: `<head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Réinitialisation de votre mot de passe</title>
+          <style>
+              /* Ajoutez vos styles CSS en ligne ici */
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f4f4f4;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #ffffff;
+                  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+              }
+              h1 {
+                  color: #333;
+              }
+              p {
+                  color: #555;
+              }
+              .pass{
+                  border:1px solid   #007BFF;
+                  border-raduis:15px;
+                  padding:5px;
+                  width:50%;
+                  text-align:center;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>Réinitialisation de votre mot de passe</h1>
+              <p>Vous avez demandé à réinitialiser votre mot de passe. Voici votre code de réinitialisation :</p>
+              <p style="font-size: 24px; font-weight: bold; color: #007BFF;"class="pass"> ${resetPassword}</p>
+              <p>Utilisez ce code pour réinitialiser votre mot de passe sur notre site.</p>
+              <p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet email en toute sécurité. Votre mot de passe restera inchangé.</p>
+          </div>
+      </body>`
   };
     
         const info = await transporter.sendMail(mailOptions);
@@ -278,6 +362,7 @@ const getUserProfile= asyncHandler( async (req,res) => {
         nom:req.eleve.nom,
         prenom:req.eleve.prenom,
         email:req.eleve.email,
+        datedenaissance:req.eleve.datedenaissance,
         inscription:req.eleve.inscription,
         favorite:req.eleve.favorite,
     }
@@ -290,14 +375,33 @@ const getUserProfile= asyncHandler( async (req,res) => {
  *  @methode PUT
  *  @acces Private
  */
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'backend/uploads/photoeleves'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
 
+const upload = multer({ storage });
 const updateUserProfile= asyncHandler( async (req,res) => {
     const eleve = await Eleve.findById(req.eleve._id);
+   upload.single('file')(req, res, async (err) => {
+      if (err) {
+        console.log(err)
+        return res.status(500).json({ error: 'Erreur lors du téléversement du fichier' });
+      }
+
+      const url = req.file ? req.file.filename : null;
+
     if(eleve) {
+       eleve.photo = url;
+       eleve.genre = req.body.genre || eleve.genre;
         eleve.nom = req.body.nom || eleve.nom;
         eleve.email = req.body.email || eleve.email;
         eleve.prenom = req.body.prenom || eleve.prenom;
-        eleve.age = req.body.age || eleve.age;
+        eleve.datedenaissance = req.body.datedenaissance || eleve.datedenaissance;
         eleve.numtel = req.body.numtel || eleve.numtel;
         eleve.nvEtude = req.body.nvEtude || eleve.nvEtude;
 
@@ -318,7 +422,7 @@ const updateUserProfile= asyncHandler( async (req,res) => {
     }else{
          res.status(404);
          throw new Error('User not found')
-    }
+    }    });
   });
 
 
@@ -493,7 +597,38 @@ const addFavoriteFormation = asyncHandler(async (req, res) => {
 
   }
   
-  
+  /** 
+*  @desc demander RendezVous
+*  @route  /api/eleves/rendezvous/:id
+*  @methode POST
+*  @acces Private
+*/
+
+
+
+const DemanderRendezVous = async (req, res) => {
+  const { ensgId } = req.params;
+  const eleve = req.eleve;
+  const { date, description, accepter}=req.body;
+
+  try {
+    const ensg = await Ensg.findById(ensgId);
+    if (!ensg) {
+      return res.status(404).json({ message: 'ensg introuvable' });
+    }
+ 
+
+    ensg.rendezVous.unshift({ date, description, accepter ,eleve});
+      await ensg.save();
+
+      return res.status(201).json(ensg);
+   
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Une erreur est survenue lors de l\'ajout du rendzevous' });
+  }
+};
+
 
 export{
   modifyPassword,
@@ -510,7 +645,8 @@ export{
     registerUser,
     getUserProfile,
     getAllEleves,
-    addFavoriteFormation
+    addFavoriteFormation,
+    DemanderRendezVous
     
 
 }

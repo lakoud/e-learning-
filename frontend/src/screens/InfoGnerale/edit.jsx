@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useUpdateMutation } from "../../slices/InfoApiSlice";
+import { toast } from "react-toastify";
 
 const Edit = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -49,15 +50,18 @@ const Edit = () => {
 
     try {
       await update({_id,titre,description,adresse,email,numtel,facebook,youtube,instgram,linkedin});
-      // Handle success, navigate to the appropriate page or show a success message
+      toast.success("Information modifiée avec succès.");
+      navigate('/InfoGenrale')
+
     } catch (err) {
-      console.log(err);
-      // Handle error, show an error message
+      toast.error(err?.data?.message || err.error);
     }
   };
 
   return (
-    <Box m="20px">
+    <Box m="2% 5% 0 10%" height="100vh"
+ 
+    > 
       <Header
         title="Modifier Informations générales"
         subtitle="Modifier information générale"
@@ -157,7 +161,7 @@ const Edit = () => {
           />
         </Box>
         <Box display="flex" justifyContent="end" mt="20px">
-          <Button type="submit" color="secondary" variant="contained">
+          <Button type="submit" color="info" variant="contained">
             Modifier
           </Button>
         </Box>

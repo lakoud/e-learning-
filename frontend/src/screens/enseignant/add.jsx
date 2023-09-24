@@ -54,7 +54,9 @@ const AddEnsg = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box m="2% 5% 0 10%" height="100vh"
+ 
+  > 
       <Header title="Ajouter Enseignant" subtitle="Ajouter des informations enseignant" />
       {err != null && (
         <Box sx={{ mb: '14px' }}>
@@ -85,7 +87,7 @@ const AddEnsg = () => {
           <TextField
             fullWidth
             variant="filled"
-            multiline
+            
             type="text"
             label="Prénom"
             required
@@ -130,7 +132,7 @@ const AddEnsg = () => {
           />
         </Box>
         <Box display="flex" justifyContent="end" mt="20px">
-          <Button type="submit" color="secondary" variant="contained">
+          <Button type="submit" color="info" variant="contained">
             Ajouter
           </Button>
         </Box>

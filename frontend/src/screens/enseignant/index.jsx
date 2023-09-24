@@ -17,6 +17,7 @@ import Loader from '../../components/Loader';
 import { Link, useNavigate } from 'react-router-dom';
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Enseignants = () => {
   const theme = useTheme();
@@ -26,6 +27,7 @@ const Enseignants = () => {
   const [supprim] = useDeleteMutation();
   const [deleteRowId, setDeleteRowId] = useState(null);
   const navigate = useNavigate();
+  const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const details = async (objet) => {
     const encodedData = encodeURIComponent(JSON.stringify(objet));
@@ -103,7 +105,7 @@ const Enseignants = () => {
   return (
     <div className="main-banner">
       <Box>
-        <Header title="Enseignants" subtitle="List of Enseignants " />
+        <Header title="Les enseignants" subtitle="List des Enseignants " />
         {isLoading && <Loader />}
         <div className="d-flex justify-content-end">
           <Link to="/addensg">

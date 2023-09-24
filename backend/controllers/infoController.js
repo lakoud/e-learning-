@@ -28,8 +28,8 @@ const addInfo= asyncHandler( async (req,res) => {
 
     if(info){
     
-        const redirectUrl = req.query.redirect || '/';
-        res.redirect(redirectUrl);
+      res.status(200).json({ message: "Ajouté avec succées " });
+
 
     }else{
         res.status(400);

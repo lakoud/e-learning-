@@ -5,8 +5,8 @@ import Cours from "../models/courModel.js";
 import multer from 'multer';
 import fs from 'fs';
 import Eleve from '../models/eleveModel.js'
-import { Server } from 'socket.io';
 import User from "../models/userModel.js";
+import Categorie from "../models/CategorieModel.js";
 
 
 /**
@@ -16,39 +16,50 @@ import User from "../models/userModel.js";
  *  @acces private
  */
 
-const addFormation= asyncHandler( async (req,res) => {
+const addFormation = asyncHandler(async (req, res) => {
   try {
-    const { nom, description, ensgId } = req.body;
+    const { nom, description, ensgId,categorieId ,prix} = req.body;
+
     const ensg = await Ensg.findById(ensgId);
+
     if (!ensg) {
       return res.status(404).json({ message: 'ensg not found' });
     }
-    
-    const formation = new Formation({ nom, description, ensg: ensg._id });
+    const categorie = await Categorie.findById(categorieId);
+
+    if (!categorie) {
+      return res.status(404).json({ message: 'Categorie not found' });
+    }
+    const formation = new Formation({
+      prix,
+      nom,
+      description,
+      ensg: ensg._id,
+      categorie:categorie._id
+    });
+
     await formation.save();
 
     res.status(201).json(formation);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
- 
- 
-   
-    // res.status(200).json({message:'ensg adedd'})
 });
 
 /**
- * @desc  Get   All Ensg
- *  @route  /api/users/profile
+ * @desc  Get  foramtion
+ *  @route  /api/formation/
  *  @methode GET
  *  @acces Private
  */
 
 const getformation= asyncHandler( async (req,res) => {
-    const formation = await Formation.find().populate('ensg','nom prenom');
-    
+  const formation = await Formation.find()
+  .populate('ensg', 'nom prenom')
+  .populate('categorie', 'nomCategorie');    
       
-    res.status(200).json(formation)});
+    res.status(200).json(formation)
+  });
 
 
 /**
@@ -65,7 +76,6 @@ const updateFormation= asyncHandler( async (req, res) => {
       const formation = await Formation.findById(idToUpdate);
   
       if (!formation) {
-        console.log("formation not found")
 
         return res.status(404).json({ message: "formation not found" });
       }
@@ -73,26 +83,30 @@ const updateFormation= asyncHandler( async (req, res) => {
       if (!ensg) {
         return res.status(404).json({ message: 'ensg not found' });
       }
-      
+      const categorie = await Categorie.findById(req.body.categorieId);
+
+      if (!categorie) {
+        return res.status(404).json({ message: 'Categorie not found' });
+      }
+ 
       const newData = {
+        prix: req.body.prix|| formation.prix,
         nom: req.body.nom|| formation.nom,
         description: req.body.description|| formation.description,
         ensg: req.body.ensg|| formation.ensg,
+        categorie:categorie._id
 
     
       };
       const eleve = await Eleve.find();
-
       eleve.forEach( async (element) => {
         
-   
    
         element.inscription.forEach(function callback(value, index) {
           console.log("2")
           if(value._id==req.params.id.trim()){
             element.inscription.splice(index, 1);
           element.inscription.push(formation);
-      
            
           }
         });
@@ -100,10 +114,6 @@ const updateFormation= asyncHandler( async (req, res) => {
           if(value._id==req.params.id.trim()){
             element.favorite.splice(index, 1);
             element.favorite.push(formation);
-
-
-              
-     
           }
         });
         await element.save()
@@ -113,7 +123,7 @@ const updateFormation= asyncHandler( async (req, res) => {
  
 
     await formation.save();
-    res.status(500).json({ message: " updating formation", });
+    res.json({ message: 'Formation modifié avec succès' });
 
     } catch (error) {
       res.status(500).json({ message: "Error updating formation", error: error.message });
@@ -213,40 +223,19 @@ async function ajouterCoursAFormation(req, res) {
     formation.cours.push({ titre: nomCours, description: descriptionCours ,url:url });
     await formation.save();
 
-
     const io = req.app.get('io'); 
     const admin = await User.find();
 
  
     admin.forEach(async (element) => {
-      const notification = { text:req.ensg.nom+'a ajouter un cours a la formation'+formation.nom }; // Create the notification object
+      const notification = { text:req.ensg?.nom+'a ajouter un cours a la formation'+formation.nom }; 
      const index =element.notifications.push(notification);
      await element.save().then(() => {
-      io.emit('addCours', element.notifications[index-1]); // Emit the notification to the client after save
-      console.log('Notification saved and emitted.'); // You can add additional actions/log here
+      io.emit('addCours', element.notifications[index-1]); 
+      console.log('Notification saved and emitted.'); 
     });
 
     });
-
-  
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const eleve = await Eleve.find();
 
     eleve.forEach( async (element) => {
@@ -593,7 +582,105 @@ async function modifierCommentaireAuCours(req, res) {
   }
 }
 
+/** 
+*  @desc Ajouter ressource au cours
+*  @route  /api/cours/:formationId/:coursId
+*  @methode Post
+*  @acces Private
+*/
+let dossier=""
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'backend/uploads/'+dossier); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
 
+const upload = multer({ storage });
+
+
+const ajouterRessourcesAuCours = async (req, res) => {
+  const { formationId, coursId } = req.params;
+  // const { titre } = req.body;
+
+  try {
+    const formation = await Formation.findById(formationId);
+    if (!formation) {
+      return res.status(404).json({ message: 'Formation introuvable' });
+    }
+
+    const cours = formation.cours.id(coursId);
+    if (!cours) {
+      return res.status(404).json({ message: 'Cours introuvable' });
+    }
+    dossier="Ressources"
+    upload.single('file')(req, res, async (err) => {
+      if (err) {
+        console.log(err)
+        return res.status(500).json({ error: 'Erreur lors du téléversement du fichier' });
+      }
+ 
+      const url = req.file ? req.file.filename : null;
+      const titre=req.body.titre;
+      console.log(req.file)
+    cours.ressources.unshift({ titre,url }); 
+    await formation.save();
+
+    return res.status(201).json(cours); });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Une erreur est survenue lors de l\'ajout du ressources' });
+  } 
+};
+
+/** 
+*  @desc Supprimer ressources
+*  @route  /api/formation/formationId/upload/:fileName
+*  @methode DELETE
+*  @acces Private
+*/
+const supprimerRessources =async (req, res) => {
+  const filePath = 'backend/uploads/Ressources/' + req.body.fileName;
+  const { formationId,coursId,ressourceId } = req.params;
+  console.log(req.body.fileName)
+  try {
+    const formation = await Formation.findById(formationId);
+    if (!formation) {
+      return res.status(404).json({ message: 'Formation introuvable' });
+    }
+    const cours = formation.cours.id(coursId);
+    if (!cours) {
+      return res.status(404).json({ message: 'Cours introuvable' });
+    }
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Fichier non trouvé' });
+    }
+
+
+    const indexCommentaire = cours.ressources.find(ressourcesSchema => ressourcesSchema._id.equals(ressourceId));
+
+
+    if (!indexCommentaire) {
+      return res.status(404).json({ message: 'Ressoource non trouvé dans le cours' });
+    }
+    
+  
+
+    cours.ressources.splice(indexCommentaire, 1);
+    fs.unlinkSync(filePath);
+    await formation.save();
+
+    res.json({ message: 'Fichier supprimé avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la suppression du mini projet' });
+  }
+
+
+ 
+};
 
 
 
@@ -603,16 +690,16 @@ async function modifierCommentaireAuCours(req, res) {
 *  @methode POST
 *  @acces Private
 */
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'backend/uploads/MiniProjets'); 
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname); 
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'backend/uploads/MiniProjets'); 
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + '-' + file.originalname); 
+//   }
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 
 const ajouterMiniProjet = async (req, res) => {
@@ -624,7 +711,7 @@ const ajouterMiniProjet = async (req, res) => {
     if (!formation) {
       return res.status(404).json({ message: 'Formation introuvable' });
     }
-
+    dossier="MiniProjets"
     upload.single('file')(req, res, async (err) => {
       if (err) {
         return res.status(500).json({ error: 'Erreur lors du téléversement du fichier' });
@@ -1026,8 +1113,8 @@ const deleteExerciceAuCours = async (req, res) => {
 
 
 export{
-  deleteExerciceAuCours,
-  ajouterExerciceAuCours,
+    deleteExerciceAuCours,
+    ajouterExerciceAuCours,
     supprimerQuestionduQuiz,
     modifierQuestionQuizduCours,
     supprimerFichier,
@@ -1046,4 +1133,6 @@ export{
     deleteFormation,
     getFourmationById,
     creeQuizAuCours,
+    ajouterRessourcesAuCours,
+    supprimerRessources
 }

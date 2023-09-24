@@ -7,6 +7,7 @@ import { useModifierMutation } from '../../slices/usersApiSlice';
 import { setCredentials } from '../../slices/authSlice';
 import { toast } from "react-toastify";
 import Loader from '../../components/Loader';
+import Footer from "../global/Footer";
 
 export const NewPassword = () => {
   const location = useLocation();
@@ -41,11 +42,9 @@ export const NewPassword = () => {
     }
   };
 
-  return (
+  return (<>
     <div className="component">
-      <nav className="navbar">
-        <div className="logo">Logo</div>
-      </nav>
+     
       <FormContainer>
         <h1>Choisissez un nouveau mot de passe</h1>
         <p>Créez un mot de passe d’au moins 6 caractères. Un mot de passe fort est une combinaison de lettres, de chiffres et de signes de ponctuation.</p>
@@ -70,16 +69,21 @@ export const NewPassword = () => {
           </Form.Group>
 
           {isLoading && <Loader />}
-          <Row className="px-3 ">
-            <Col>
-              <Link to="/login">Annuler</Link>
-            </Col>
-          </Row>
-          <Button type='submit' variant='primary' className='mt-3'>
-            Confirmer
-          </Button>
+       
+
+
+          <div className="buttons">
+                        
+                        <Button type='submit' variant='primary' className='mt-3 '>
+                        Confirmer
+                        </Button>
+                        <Link to='/login' variant='light' className='mt-3 annuler-button '>
+                            Annuler
+                        </Link>
+                        </div>
         </Form>
       </FormContainer>
-    </div>
+      
+    </div><Footer/></>
   );
 }

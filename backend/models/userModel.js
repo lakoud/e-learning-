@@ -58,17 +58,17 @@ userSchema.methods.matchPassword=async function (enteredPassword){
 
 
 userSchema.pre('save',async function (next) {
-    // if(!this.isModified('resetPassword')){
-    //     next();
+    if(!this.isModified('resetPassword')){
+        next();
 
-    // }
-    // try  {
-    //     const salt =await  bcrypt.genSalt(10);
-    //     this.resetPassword= await bcrypt.hash(this.resetPassword,salt)
+    }
+    try  {
+        const salt =await  bcrypt.genSalt(10);
+        this.resetPassword= await bcrypt.hash(this.resetPassword,salt)
 
-    // } catch (error) {
-    //     console.log(error)
-    // }
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 

@@ -16,6 +16,8 @@ This file's table of contents is outlined below:
 ** - Course List CSS
 ** - Calendar CSS
 ** - Notifications CSS
+** -Not Found Page CSS
+
 
 */
 
@@ -23,6 +25,7 @@ This file's table of contents is outlined below:
 Default CSS
 =================================================*/
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 html,
 body,
 #root,
@@ -30,7 +33,7 @@ body,
 .content {
   height: 100%;
   width: 100%;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .app {
@@ -44,23 +47,41 @@ body,
   margin-bottom: 10px;
   position: relative;
   z-index: 1;
+  margin-left:80px;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
+/* Define the styles for the scrollbar track (the background of the scrollbar) */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px; /* Set the width of the scrollbar */
 }
 
+/* Define the styles for the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+}
+
+/* Define the styles for the scrollbar track when hovered */
+::-webkit-scrollbar-thumb:hover {
+}
 .main {
   margin: 100px;
 }
 
+
+
 /*================================================
 Sidebar CSS
 =================================================*/
-
+.sidebar{
+  position: fixed;
+z-index: 3;
+  top: 0; 
+  left: 0; 
+  height: 100%; 
+  overflow-y: auto; 
+}
 .bars {
   display: flex;
   font-size: 25px;
@@ -111,8 +132,9 @@ Footer CSS
 Cours List CSS
 =================================================*/
 
-.edit-icon {
+.action-icon {
   cursor: pointer;
+  margin-right: 15px;
 }
 
 .custom-none {
@@ -379,4 +401,56 @@ Notifications CSS
   border-radius: 50%;
   max-width: 50px; 
   margin-right: 10px;
+}
+/**/
+.annuler-button{
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 5px;
+  border: 1px solid blue;
+  text-align: center;
+}
+.buttons{
+  border-radius: 5px;
+  text-decoration: none;
+
+  display:grid;
+  
+}
+
+/*================================================
+Not Found Page CSS
+=================================================*/
+
+.not-found {
+  width: 50%;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+}
+.not-found-child {
+  margin-top: 50px;
+  width: 100%;
+  margin: auto;
+  text-align: center; 
+  padding: 20px; 
+}
+
+.not-found-button {
+  margin-top: 20px; 
+  border-radius: 5px;
+  padding: 10px 20px; 
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  text-decoration: none;
+  color: black;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+}
+.not-found-button:hover {
+  background-color: rgb(102, 102, 247); 
+  color: white; 
 }

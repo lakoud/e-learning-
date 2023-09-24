@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler"
 import Ensg from "../models/ensgModel.js";
 import generateToken from "../utils/generateToken.js";
 import Formation from "../models/formationModel.js";
+import multer from 'multer';
 
 
 /**
@@ -107,31 +108,53 @@ const getEnsgProfile= asyncHandler( async (req,res) => {
 *  @methode PUT
 *  @acces Private
 */
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'backend/uploads/photoensg'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
+
+const upload = multer({ storage });
 
 const updateEnsgProfile= asyncHandler( async (req,res) => {
   const ensg = await Ensg.findById(req.ensg._id);
   const ensgadmin = await Ensg.findById(req.params.id);
-  console.log()
-console.log(req.params)
-  if(ensg || ensgadmin ) {
-    ensg.name = req.body.name || ensg.name;
-   ensg.email = req.body.email || ensg.email;
-   if(req.body.password) { 
-    ensg.password = req.body.password;
+  upload.single('file')(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Erreur lors du téléversement du fichier' });
+    }
 
-   }
-   const updatedEnsg=await ensg.save();
-   res.status(200).json({
-       _id:updatedEnsg._id,
-       name:updatedEnsg.name,
-       email:updatedEnsg.email,
-   }
+    const url = req.file ? req.file.filename : null;
+      if(ensg || ensgadmin ) {
+        ensg.genre= req.body.genre || ensg.genre;
+        ensg.photo = url || ensg.photo;
+        ensg.prenom = req.body.prenom || ensg.prenom;
+        ensg.numtel = req.body.numtel || ensg.numtel;
+        ensg.nom = req.body.nom || ensg.nom;
+        ensg.email = req.body.email || ensg.email;
+          if(req.body.password) { 
+            ensg.password = req.body.password;
 
-   )
-  }else{
-       res.status(404);
-       throw new Error('User not found')
+          }
+        const updatedEnsg=await ensg.save();
+        res.status(200).json({
+            _id:updatedEnsg._id,
+            nom:updatedEnsg.nom,
+            email:updatedEnsg.email,
+            prenom:updatedEnsg.prenom,
+
+        }
+
+       )
+       }else{
+          res.status(404);
+          throw new Error('Ensg not found')
   }
+
+});
 });
 /**
 *  @desc Update  ensg  profile
@@ -144,6 +167,7 @@ const updateEnsg= asyncHandler( async (req,res) => {
     const ensg = await Ensg.findById(req.params.id);
 
     if(ensg  ) {
+      ensg.genre= req.body.genre || ensg.genre;
       ensg.nom = req.body.nom || ensg.nom;
      ensg.email = req.body.email || ensg.email;
      ensg.prenom = req.body.prenom || ensg.prenom;
@@ -202,8 +226,73 @@ const logoutEnsg= asyncHandler( async (req,res) => {
       res.status(500).json({ message: "Error deleting info", error: error.message });
     }
   })
+/** 
+*  @desc Delete  rendez vous 
+*  @route PUT /api/ensg/rendezVous/:id
+*  @methode delete
+*  @acces Private
+*/
+async function supprimerRenderVous(req, res) {
+
+  const rendezVousId = req.params.id; 
+  const ensgId = req.ensg._id; 
+
+  try {
+    const ensg = await Ensg.findById(ensgId);
+
+    if (!ensg) {
+      return res.status(404).json({ message: 'Ensg non trouvée' });
+    }
+
+    const indexRendezVous = ensg.rendezVous.find(rendezVous => rendezVous._id.equals(rendezVousId));
+    if (indexRendezVous === -1) {
+      return res.status(404).json({ message: 'RendezVous non trouvé dans la formation' });
+    }
+
+    ensg.rendezVous.splice(indexRendezVous, 1);
+
+    await ensg.save();
+
+    res.json({ message: 'rendezVous supprimé de la formation avec succès', ensg });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la suppression du cours de la formation' });
+  }
+}
+
+/** 
+*  @desc accepter  rendez vous 
+*  @route  /api/ensg/rendezVousAccepter/:id
+*  @methode PUT
+*  @acces Private
+*/
+async function accepterRenderVous(req, res) {
+
+  const rendezVousId = req.params.id; 
+  const ensgId = req.ensg?._id; 
+
+  try {
+    const ensg = await Ensg.findById(ensgId);
+
+    if (!ensg) {
+      return res.status(404).json({ message: 'Ensg non trouvée' });
+    }
+
+    const indexRendezVous = ensg.rendezVous.find(rendezVous => rendezVous._id.equals(rendezVousId));
+    if (indexRendezVous === -1) {
+      return res.status(404).json({ message: 'RendezVous non trouvé dans la formation' });
+    }
 
 
+    indexRendezVous.accepter=true;
+    await ensg.save();
+
+    res.json({ message: 'rendezVous supprimé de la formation avec succès', ensg });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la suppression du cours de la formation' });
+  }
+}
 
 export{
     updateEnsg,
@@ -213,5 +302,7 @@ export{
     authEnsg,
     updateEnsgProfile,
     logoutEnsg,
-    supprimerensg
+    supprimerensg,
+    supprimerRenderVous,
+    accepterRenderVous
 }

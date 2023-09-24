@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Typography,
   useTheme,
   Dialog,
   DialogTitle,
@@ -17,6 +16,7 @@ import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useGetMutation, useDeleteMutation } from '../../slices/EleveApiSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const Eleves = () => {
   const [data, setData] = useState([]);
@@ -37,8 +37,9 @@ const Eleves = () => {
           nom: item.nom + ' ' + item.prenom,
         }));
         setData(modifiedData);
+
       } catch (err) {
-        console.log(err);
+        toast.error(err?.data?.message || err.error);
       }
     };
 
@@ -59,8 +60,10 @@ const Eleves = () => {
       await supprim(deleteRowId).unwrap();
       setData((prevRows) => prevRows.filter((row) => row.id !== deleteRowId));
       setDeleteRowId(null);
+      toast.success("Élève a été supprimé avec succès.");
+
     } catch (err) {
-      console.log(err);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
@@ -93,8 +96,8 @@ const Eleves = () => {
     <div className="main-banner">
       <Box>
         <Header
-          title="Élèves"
-          subtitle="Liste des élèves inscrits aux formations"
+          title="Les élèves"
+          subtitle="Liste des élèves "
         />
         {isLoading && <Loader />}
         <Box

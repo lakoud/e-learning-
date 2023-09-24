@@ -7,6 +7,7 @@ import { usePostMutation } from '../../slices/usersApiSlice';
 import { setCredentials } from '../../slices/authSlice';
 import { Alert, Box } from "@mui/material";
 import Loader from '../../components/Loader';
+import Footer from "../global/Footer";
 
 export const ResetPassword = () => {
     const [email, setEmail] = useState('');
@@ -33,7 +34,7 @@ export const ResetPassword = () => {
         }
     };
 
-    return (
+    return (<>
         <div className="component">
         
             <FormContainer>
@@ -55,14 +56,18 @@ export const ResetPassword = () => {
                         ></Form.Control>
                     </Form.Group>
                     {isLoading && <Loader />}
-                    <Button type='submit' variant='light' className='mt-3 mx-3 '>
-                        Annuler
-                    </Button>
+                    <div className="buttons">
+                        
                     <Button type='submit' variant='primary' className='mt-3 '>
                         Recherche
                     </Button>
+                    <Link to='/login' variant='light' className='mt-3 annuler-button '>
+                        Annuler
+                    </Link>
+                    </div>
+                   
                 </Form>
             </FormContainer>
-        </div>
+        </div><Footer/></>
     );
 };

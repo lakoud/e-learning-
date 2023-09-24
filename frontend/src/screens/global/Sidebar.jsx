@@ -9,7 +9,7 @@ import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import SchoolIcon from '@mui/icons-material/School';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import person  from '../../assets/user.png'
@@ -47,8 +47,9 @@ const Sidebar = () => {
   return (
     <Box
     className="sidebar"
+    
     sx={{
-
+   
         
       "& .pro-sidebar-inner": {
         background: `${colors.primary[400]} !important`,
@@ -117,7 +118,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {userInfo.email} 
+                  {userInfo.name} 
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Dev
@@ -135,27 +136,59 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
+<Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
               Data
             </Typography>
             <Item
-              title="Eleves"
+              title="Elèves"
               to="/Eleves"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
-              setSelected={setSelected}
+              setSelected={setSelected}Elèves
             />
+           {isCollapsed &&     <Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
+              Elèves
+            </Typography>}
+            <Item
+              title="Parents"
+              to="/Parents"
+              icon={<PeopleOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}Elèves
+            />
+           {isCollapsed &&     <Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
+              Parents
+            </Typography>}
             <Item
               title="Enseignants"
               to="/Enseignants"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            />    
+             {isCollapsed &&      <Typography
+            variant="body1"
+            align="center"
+            color={colors.grey[300]}
+            sx={{ margin: "auto" }}
+          >
+            Enseignants
+          </Typography>}
             <Item
               title="Informations générale de site"
               to="/InfoGenrale"
@@ -163,15 +196,44 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
-            <Item
-              title="Formations"
-              to="/Formations"
+                      {isCollapsed &&        <Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
+          Info
+        </Typography>}
+       <Item
+              title="Categories"
+              to="/Categories"
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-       
+                {isCollapsed &&     <Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
+            Catégories
+          </Typography>}
+            <Item
+              title="Formations"
+              to="/Formations"
+              icon={<SchoolIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+        {isCollapsed && <Typography
+          variant="body1"
+          align="center"
+          color={colors.grey[300]}
+          sx={{ margin: "auto" }}
+        >
+            Formations
+          </Typography>}
           </Box>
         </Menu>
       </ProSidebar>

@@ -14,7 +14,7 @@ import Header from "../../components/Header";
 import Loader from "../../components/Loader";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { useGetMutation, useDeleteMutation } from "../../slices/InfoApiSlice";
+import { useGetedMutation, useDeleteMutation } from "../../slices/InfoApiSlice";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
 import { useTheme } from "@emotion/react";
@@ -23,19 +23,21 @@ const InfoGenrale = () => {
   const navigate = useNavigate();
   const [deleteRowId, setDeleteRowId] = useState(null);
   const [data, setData] = useState([]);
-  const [getInfo, { isLoading }] = useGetMutation();
+  const [getData, { isLoading }] = useGetedMutation();
   const [supprim, { isLoadingg }] = useDeleteMutation();
   const theme = useTheme();
 
   useEffect(() => {
     const getHandler = async () => {
       try {
-        const userData = await getInfo();
-        const modifiedData = userData.data.map((item) => ({
+        const info = await getData();
+
+        const modifiedData = info.data.map((item) => ({
           ...item,
           id: item._id,
         }));
         setData(modifiedData);
+        console.log(data)
       } catch (err) {
         console.log(err);
       }

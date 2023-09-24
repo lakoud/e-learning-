@@ -15,6 +15,7 @@ import {
     addFavoriteFormation,
     nouvelleInscription,
     deleteEleve,
+    DemanderRendezVous,
 
 } from "../controllers/elveController.js";
 import { protect } from "../middleware/EleveauthMiddleware.js"; 
@@ -49,5 +50,12 @@ router.post('/resetPassword',resetPassword)
 router.post('/writePassword',writeNewPassword)
 
 router.route('/modifierPassword').post(protect,modifyPassword);
+
+
+
+router.route('/rendezvous/:ensgId').post(protect,DemanderRendezVous);
+
+
+
 
 export default router;

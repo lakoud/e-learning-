@@ -1,6 +1,4 @@
 import express from "express"
-import Formation from '../models/formationModel.js'
-import mongoose from 'mongoose';
 
 import {   
   deleteExerciceAuCours,
@@ -14,11 +12,11 @@ import {
   getCoursDeFormationById,
   ajouterCommentaireAuCours,
   supprimerCommentaireAuCours,
-  modifierCommentaireAuCours
+  modifierCommentaireAuCours,
+  ajouterRessourcesAuCours,supprimerRessources
 } from "../controllers/formationController.js";
 import { protect } from "../middleware/EnsgauthMiddleware.js"; 
 import { protecteleve } from "../middleware/EleveauthMiddleware.js"; 
-import { adminprotect } from "../middleware/authMiddleware.js"; 
 
 
 const router=express.Router();
@@ -53,6 +51,10 @@ router.route('quiz/:formationId/:coursId/:questionId').put(protect,modifierQuest
 //exercice 
 
 router.route('/exercices/:formationId/:coursId').post(protect,ajouterExerciceAuCours).put(protect,ajouterExerciceAuCours).delete(protect,deleteExerciceAuCours)
+
+//ressources
+router.route('/ressources/:formationId/:coursId').post(protect,ajouterRessourcesAuCours).put(protect,ajouterExerciceAuCours).delete(protect,deleteExerciceAuCours)
+router.delete('/ressources/:formationId/:coursId/:ressourceId/',protect, supprimerRessources);
 
 
 export default router;

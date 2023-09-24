@@ -9,7 +9,7 @@ import { Alert, Box, useTheme } from "@mui/material";
 import Footer from "../global/Footer";
 import logo from '../../assets/logo.png';
 import { tokens } from "../../theme";
-
+import { FormContainer } from "../../components/formContainer";
 const LoginScreen = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,7 +41,7 @@ const LoginScreen = () => {
 
   return (
     <>
-      <div className="mb-4 mx-2">
+      <div className="m-5 mx-2 ">
         <FormContainer>
           <img
             alt="Logo"
@@ -81,9 +81,16 @@ const LoginScreen = () => {
               </Col>
             </Row>
             {isLoading && <Loader />}
-            <Button type='submit' variant='primary' className='mt-3'>
-              Connexion
-            </Button>
+           
+
+
+            <div className="buttons">
+                        
+                        <Button type='submit' variant='primary' className='mt-3 '>
+                        Connexion
+                        </Button>
+                        
+                        </div>
           </Form>
         </FormContainer>
       </div>

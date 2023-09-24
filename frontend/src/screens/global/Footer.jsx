@@ -3,7 +3,7 @@ import React from 'react';
 class Footer extends React.Component {
   render() {
     return (
-      <footer className="footer-area">
+      <footer className="footer-area mt-5">
         <div className="copyright-area">
           <p>
             Future Visions{" "}

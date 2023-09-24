@@ -9,7 +9,9 @@ import {
   getEnsgs,getEnsgProfile,authEnsg
     ,updateEnsgProfile,
     logoutEnsg,
-    supprimerensg
+    supprimerensg,
+    supprimerRenderVous,
+    accepterRenderVous
 
 } from "../controllers/ensgController.js";
 
@@ -28,6 +30,7 @@ router.get('/get',getEnsgs)
 router.post('/logout',logoutEnsg)
 
 router.route('/:id').delete(adminprotect,supprimerensg).put(updateEnsg);
+router.route('/rendezVous/:id').delete(protect,supprimerRenderVous).put(protect,accepterRenderVous);
 
 
 export default router;
